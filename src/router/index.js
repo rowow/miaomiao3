@@ -34,6 +34,11 @@ export default new VueRouter({
   mode:'history',
   base:process.env.BASE_URL,
   routes:[
-    CinemaRouter,MovieRouter,MineRouter
+    CinemaRouter,MovieRouter,MineRouter,
+    // 路由重定向 
+    {
+      path : '/',
+      redirect : '/movie'
+    } 
   ]
 })
