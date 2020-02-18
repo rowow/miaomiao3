@@ -1,88 +1,21 @@
 <template>
   <div class="cinema_body">
         <ul>
-            <li>
+            <li v-for="(item,i) in cinemaList" :key="i">
                 <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
+                    <span>{{ item.rm}}</span>
+                    <span class="q"><span class="price"> {{ item.sellPrice }}</span> 元起</span>
                 </div>
                 <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
+                    <span>{{ item.addr }}</span>
+                    <span>{{ item.distance }}</span>
                 </div>
                 <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
+                    <!-- <div>小吃</div>
+                    <div>折扣卡</div> -->
+                    <span v-for="(value,key) in item.tag" :key="key">
+                        <div v-if="value===1" :class=" key | classCard ">{{ key | formatCard }}</div>
+                    </span>
                 </div>
             </li>
         </ul>
@@ -91,7 +24,160 @@
 
 <script>
 export default {
-    name : 'CinemaList'
+    name : 'CinemaList',
+    data(){
+        return{
+            cinemaList:[
+                {
+                    "id" : 17158,
+                    "mark" : 0,
+                    "rm" : "JIA(佳莱影城九亭店)",
+                    "sellPrice" : "18",
+                    "addr" : "松江区地铁九号线九亭站二号楼内",
+                    "distance" : "108km",
+                    "tag" : {
+                        "allowRefund" : 1,
+                        "buyout" : 0,
+                        "cityCardTag" : 0,
+                        "deal" : 0,
+                        "endorse" : 1,
+                        "hallTypeVoList" : [],
+                        "sell" : 1,
+                        "snack" : 1,
+                        "vipTag" : "折扣卡",
+                    }
+                },
+                {
+                    "id" : 17281,
+                    "mark" : 0,
+                    "rm" : "JIA(佳莱影城九亭店1)",
+                    "sellPrice" : "18.5",
+                    "addr" : "b江区地铁6号线09站1号楼内",
+                    "distance" : "90.8km",
+                    "tag" : {
+                        "allowRefund" : 0,
+                        "buyout" : 0,
+                        "cityCardTag" : 0,
+                        "deal" : 0,
+                        "endorse" : 1,
+                        "hallTypeVoList" : [],
+                        "sell" : 0,
+                        "snack" : 1,
+                        "vipTag" : "折扣卡",
+                    }
+                },
+                {
+                    "id" : 17158,
+                    "mark" : 0,
+                    "rm" : "JIA(佳莱影城九亭店2)",
+                    "sellPrice" : "8.5",
+                    "addr" : "阿斯顿松号楼内",
+                    "distance" : "800km",
+                    "tag" : {
+                        "allowRefund" : 1,
+                        "buyout" : 0,
+                        "cityCardTag" : 0,
+                        "deal" : 0,
+                        "endorse" : 0,
+                        "hallTypeVoList" : [],
+                        "sell" : 1,
+                        "snack" : 0,
+                        "vipTag" : "折扣卡",
+                    }
+                },
+                {
+                    "id" : 17158,
+                    "mark" : 0,
+                    "rm" : "JIA(佳莱影城九亭店3)",
+                    "sellPrice" : "17",
+                    "addr" : "湖南省贝拉市二号口倒数第去",
+                    "distance" : "10km",
+                    "tag" : {
+                        "allowRefund" : 1,
+                        "buyout" : 0,
+                        "cityCardTag" : 0,
+                        "deal" : 0,
+                        "endorse" : 1,
+                        "hallTypeVoList" : [],
+                        "sell" : 1,
+                        "snack" : 1,
+                        "vipTag" : "折扣卡",
+                    }
+                },
+                {
+                    "id" : 17158,
+                    "mark" : 0,
+                    "rm" : "JIA(佳莱影城九亭店4)",
+                    "sellPrice" : "16",
+                    "addr" : "东莞市哦其次区可参考all噢奇葩",
+                    "distance" : "0.5km",
+                    "tag" : {
+                        "allowRefund" : 0,
+                        "buyout" : 0,
+                        "cityCardTag" : 0,
+                        "deal" : 0,
+                        "endorse" : 1,
+                        "hallTypeVoList" : [],
+                        "sell" : 0,
+                        "snack" : 0,
+                        "vipTag" : "折扣卡",
+                    }
+                },
+                {
+                    "id" : 17158,
+                    "mark" : 0,
+                    "rm" : "JIA(佳莱影城九亭店5)",
+                    "sellPrice" : "180",
+                    "addr" : "松江区地铁19号线0亭站10号楼内",
+                    "distance" : "18km",
+                    "tag" : {
+                        "allowRefund" : 1,
+                        "buyout" : 0,
+                        "cityCardTag" : 0,
+                        "deal" : 0,
+                        "endorse" : 1,
+                        "hallTypeVoList" : [],
+                        "sell" : 0,
+                        "snack" : 1,
+                        "vipTag" : "折扣卡",
+                    }
+                },
+            ]
+        }
+    },
+    filters:{
+        // 格式化卡片信息（将后台数据英文转化为中文）
+        formatCard(key){
+            var card = [
+                { key : "allowRefund" , value : "退" },
+                { key : "endorse" , value : "改签" },
+                { key : "sell" , value : "折扣卡" },
+                { key : "snack" , value : "小吃" },
+            ]
+            for(var i = 0;i < card.length;i++){
+                if(card[i].key === key){
+                    return card[i].value
+                }
+            }
+            return '';  // 如果没有匹配到返回空字符串
+        },
+
+        // 根据后台数据修改对应数据的class
+        classCard(key){
+            var card = [
+                { key : "allowRefund" , value : "bl" },
+                { key : "endorse" , value : "bl" },
+                { key : "sell" , value : "or" },
+                { key : "snack" , value : "or" },
+            ]
+            for(var i = 0;i < card.length;i++){
+                if(card[i].key === key){
+                    return card[i].value
+                }
+            }
+            return '';  // 如果没有匹配到返回空字符串
+        }
+    }
 }
 </script>
 
