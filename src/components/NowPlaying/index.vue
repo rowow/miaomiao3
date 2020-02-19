@@ -1,19 +1,21 @@
 <template>
-  <div class="movie_body">
-      <ul>
-          <li v-for="(item,i) in movieList" :key="i">
-              <div class="pic_show"><img :src="item.img | srcFilterWH('128.180')"></div>
-              <div class="info_list">
-                  <h2>{{item.nm}}<img v-if="item.version" src="@/assets/maxs.png"></h2>
-                  <p>观众评 <span class="grade">{{item.sc}}</span></p>
-                  <p>主演: {{item.star}}</p>
-                  <p>{{item.showInfo}}</p>
-              </div>
-              <div class="btn_mall">
-                  购票
-              </div>
-          </li>
-      </ul>
+  <div class="movie_body" ref="movie_body">
+      <Scroller>
+        <ul>
+            <li v-for="(item,i) in movieList" :key="i">
+                <div class="pic_show"><img @tap="handlerToDetail()" :src="item.img | srcFilterWH('128.180')"></div>
+                <div class="info_list">
+                    <h2>{{item.nm}}<img v-if="item.version" src="@/assets/maxs.png"></h2>
+                    <p>观众评 <span class="grade">{{item.sc}}</span></p>
+                    <p>主演: {{item.star}}</p>
+                    <p>{{item.showInfo}}</p>
+                </div>
+                <div class="btn_mall">
+                    购票
+                </div>
+            </li>
+        </ul>
+      </Scroller>
   </div>
 </template>
 
@@ -22,16 +24,36 @@ export default {
     name : 'NowPlaying',
     data(){
         return {
-            movieList:[]
+            movieList : [],
+            preCityId : -1
         }
     },
-    mounted(){
-        this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+    activated(){
+        // 获取状态管理中保留的cityId
+        var curCityId = this.$store.state.City.id;
+        
+        // 判断当前cityid与上一次cityid
+        if(this.preCityId === curCityId) return
+        console.log('first');
+        this.axios.get('/api/movieOnInfoList?cityId='+curCityId).then((res)=>{
             var msg = res.data.msg
             if(msg === 'ok'){
                 this.movieList = res.data.data.movieList;
+                this.preCityId = curCityId;
+
+                // // vue中提供nextTick机制，在页面数据和dom加载完成后才执行
+                // this.$nextTick(()=>{
+                //     new BScroll(this.$refs.movie_body,{
+                //         tap : true  // 打开tap事件
+                //     })
+                // })
             }
         })
+    },
+    methods:{
+        handlerToDetail(){
+            console.log('handlerToDetail');
+        }
     }
 }
 </script>

@@ -1,20 +1,25 @@
 <template>
   <div class="city_body">
       <div class="city_list">
-          <div class="city_hot">
-              <h2>热门城市</h2>
-              <ul class="clearfix">
-                  <li v-for="(item,i) in hotLists" :key="i">{{item.nm}}</li>
-              </ul>
-          </div>
-          <div class="city_sort" ref="city_sort">
-              <div  v-for="(item,i) in cityLists" :key="i">
-                  <h2>{{item.index}}</h2>
-                  <ul>
-                      <li v-for="(itemList,j) in item.list" :key="j">{{itemList.nm}}</li>
-                  </ul>
+          <Loading v-if="isLoading" />
+          <Scroller ref="city_list">
+              <div>
+                <div class="city_hot">
+                    <h2>热门城市</h2>
+                    <ul class="clearfix">
+                        <li v-for="(item,i) in hotLists" :key="i" @tap="hanlderToCity(item.nm,item.id)">{{item.nm}}</li>
+                    </ul>
+                </div>
+                <div class="city_sort" ref="city_sort">
+                    <div  v-for="(item,i) in cityLists" :key="i">
+                        <h2>{{item.index}}</h2>
+                        <ul>
+                            <li v-for="(itemList,j) in item.list" :key="j" @tap="hanlderToCity(itemList.nm,itemList.id)">{{itemList.nm}}</li>
+                        </ul>
+                    </div>
+                </div>
               </div>
-          </div>
+          </Scroller>
       </div>
       <div class="city_index">
           <ul>
@@ -31,22 +36,38 @@ export default {
         return{
             hotLists:[],
             cityLists:[],
-            letterColorNum:null
+            letterColorNum:null,
+            isLoading : true
         }
     },
     mounted(){
-        this.axios.get('/api/cityList').then((res)=>{
-            var msg = res.data.msg
-            if(msg === 'ok'){
-                var cities = res.data.data.cities
+        var localCityList = window.localStorage.getItem('cityList')
+        var localHotList = window.localStorage.getItem('hotList')
+        if(localCityList && localHotList){
+            // 取本地数据
+            this.cityLists = JSON.parse(localCityList)
+            this.hotLists = JSON.parse(localHotList)
+            this.isLoading = false
+        }else{
+            console.log('requst');
+            this.axios.get('/api/cityList').then((res)=>{
+                var msg = res.data.msg
+                if(msg === 'ok'){
+                    this.isLoading = false
+                    var cities = res.data.data.cities
 
-                // 格式化城市列表
-                // [{index : 'A',list:[{nm : '安徽', id : 12}]}]
-                var { hotList,cityList } = this.formatCityList(cities);
-                this.hotLists = hotList
-                this.cityLists = cityList
-            }
-        })
+                    // 格式化城市列表
+                    // [{index : 'A',list:[{nm : '安徽', id : 12}]}]
+                    var { hotList,cityList } = this.formatCityList(cities);
+                    this.hotLists = hotList
+                    this.cityLists = cityList
+
+                    // 数据存到本地
+                    window.localStorage.setItem('cityList',JSON.stringify(cityList))
+                    window.localStorage.setItem('hotList',JSON.stringify(hotList))
+                }
+            })
+        }
     },
     methods:{
         formatCityList(cities){
@@ -105,7 +126,21 @@ export default {
             this.letterColorNum = index
             // 找到当前需要跳转的标签，将其parentNode的顶部滚动值设为当前的offsetTop
             var h2 = this.$refs.city_sort.getElementsByTagName('h2')
-            this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop
+            // this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop
+
+            // 由于添加了组件Scroller导致原来的scrollTop不能使用，故在该组件内使用了toScrollTop方法将y轴偏移的值传入
+            this.$refs.city_list.toScrollTop(-h2[index].offsetTop)
+        },
+        hanlderToCity(nm,id){
+            // 提交当前修改的nm、id给状态管理
+            this.$store.commit('City/CITY_INFO',{ nm , id})
+
+            // 存储为本地nm、id
+            window.localStorage.setItem('nowNm',nm)
+            window.localStorage.setItem('nowId',id)
+
+            // 跳转到页面
+            this.$router.push('/movie/nowplaying')
         }
     }
 }
