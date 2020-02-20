@@ -20,6 +20,8 @@
         </keep-alive>
       </div>
     <TabBar />
+    <!-- detail的页面，该写法是路由中的命名视图 -->
+    <router-view name="detail" />
   </div>
 </template>
 

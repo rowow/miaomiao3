@@ -3,9 +3,9 @@
       <Scroller>
         <ul>
             <li v-for="(item,i) in movieList" :key="i">
-                <div class="pic_show"><img @tap="handlerToDetail()" :src="item.img | srcFilterWH('128.180')"></div>
+                <div class="pic_show"><img @tap="handlerToDetail(item.id)" :src="item.img | srcFilterWH('128.180')"></div>
                 <div class="info_list">
-                    <h2>{{item.nm}}<img v-if="item.version" src="@/assets/maxs.png"></h2>
+                    <h2 @tap="handlerToDetail(item.id)">{{item.nm}}<img v-if="item.version" src="@/assets/maxs.png"></h2>
                     <p>观众评 <span class="grade">{{item.sc}}</span></p>
                     <p>主演: {{item.star}}</p>
                     <p>{{item.showInfo}}</p>
@@ -34,7 +34,7 @@ export default {
         
         // 判断当前cityid与上一次cityid
         if(this.preCityId === curCityId) return
-        console.log('first');
+        
         this.axios.get('/api/movieOnInfoList?cityId='+curCityId).then((res)=>{
             var msg = res.data.msg
             if(msg === 'ok'){
@@ -51,8 +51,9 @@ export default {
         })
     },
     methods:{
-        handlerToDetail(){
-            console.log('handlerToDetail');
+        handlerToDetail(id){
+            // 拼接动态路由的id
+            this.$router.push('/movie/detail/1/'+id)
         }
     }
 }

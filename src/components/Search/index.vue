@@ -10,7 +10,7 @@
           <h3>电影/电视剧/综艺</h3>
           <ul>
               <li v-for="(item,i) in moviesList" :key="i">
-                  <div class="img"><img :src="item.img | srcFilterWH('128.80')"></div>
+                  <div class="img"><img :src="item.img | srcFilterWH('128.80')" @click="handlerToDetail(item.id)"></div>
                   <div class="info">
                       <p><span>{{ item.nm }}</span><span>{{ item.sc }}</span></p>
                       <p>{{ item.enm }}</p>
@@ -29,7 +29,8 @@ export default {
     data(){
         return{
             message:'',
-            moviesList:[]
+            moviesList:[],
+            preCityId : -1
         }
     },
     methods:{
@@ -37,19 +38,32 @@ export default {
             if(typeof this.source ==='function'){
                 this.source('终止请求')
             }
+        },
+        handlerToDetail(id){
+            // 拼接动态路由的id
+            this.$router.push('/movie/detail/1/'+id)
         }
     },
     watch: { // 在watch中监听input的message变化，请求获取数据
         message(newValue){
 
+            // 获取状态管理中保留的cityId
+            var curCityId = this.$store.state.City.id;
+            
+            // 判断当前cityid与上一次cityid
+            if(this.preCityId === curCityId) return
+
+
             // 取消上一次请求
             this.cancelRequest()
             
-            this.axios.get('/api/searchList?cityId=10&kw='+newValue,{             
+            this.axios.get('/api/searchList?cityId='+ curCityId +'&kw='+newValue,{             
                 cancelToken: new this.axios.CancelToken((c)=> {
                     this.source = c;
                 })
             }).then((res)=>{
+                this.preCityId = curCityId;
+
                 var msg = res.data.msg
                 var movies = res.data.data.movies
                 if( msg && movies ){
