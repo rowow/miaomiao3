@@ -8,11 +8,11 @@
                 <input class="login_text" type="password" placeHolder="请输入您的密码" >
             </div>
             <div class="login_btn">
-                <input type="submit" value="登录">
+                <input @touchstart="hanlderToCenter" type="submit" value="登录">
             </div>
             <div class="login_link">
-                <a href="#">立即注册</a>
-                <a href="#">找回密码</a>
+                <router-link to="/mine/register" href="#">立即注册</router-link>
+                <router-link to="/mine/findpassword" href="#">找回密码</router-link>
             </div>
         </div>
     </div>
@@ -20,7 +20,12 @@
 
 <script>
 export default {
-    name : 'Login'
+    name : 'Login',
+    methods : {
+        hanlderToCenter(){
+            this.$router.push('/mine/center')
+        }
+    }
 }
 </script>
 
